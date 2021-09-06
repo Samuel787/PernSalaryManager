@@ -1,23 +1,17 @@
-import logo from './logo.svg';
+import { CDBBox } from 'cdbreact';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import SalaryRange from './components/SalaryRange';
+import SideBar from './components/SideBar.js';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <CDBBox display="flex" justifyContent="center">
+        <SideBar/>
+        <div style={{height:"200px", background:"red"}}></div>
+        <SalaryRange/>
+      </CDBBox>
     </div>
   );
 }
