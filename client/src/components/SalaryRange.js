@@ -1,30 +1,24 @@
-import { CDBBox, CDBContainer, CDBInputGroup, CDBBtn } from "cdbreact";
 
 const SalaryRange = () => {
     return (
-        <CDBContainer>
-            <CDBBox  display="flex" flex="row">
-                <CDBInputGroup
-                containerClassName="mb-2 mt-0"
-                prepend="Minimum Salary ($)"
-                hint = "Enter Amount"
-                size="sm"
-                type = "Number"
-                />
-                <div style={{width: "20px"}}></div>
-                <p><b> to </b></p>
-                <div style={{width: "20px"}}></div>
-                <CDBInputGroup
-                containerClassName="mb-2 mt-0"
-                prepend="Maximum Salary ($)"
-                hint = "Enter Amount"
-                size="sm"
-                type = "Number"
-                />
-                <div style={{width: "20px"}}></div>
-                <button type="button" class="btn btn-primary">Filter</button>
-            </CDBBox>
-        </CDBContainer>
+        <div style={{display: "flex", flexDirection: "row", height: "50px"}}>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Minimum Salary ($)</span>
+                </div>
+                <input type="number" min="0" step="0.01" class="form-control" placeholder="Enter Amount" aria-label="Username" aria-describedby="basic-addon1"/>
+            </div>
+
+            <h4 style={{paddingLeft:"20px", paddingRight:"20px"}}> - </h4>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Maximum Salary ($)</span>
+                </div>
+                <input type="number" min="0" step="0.01" class="form-control" placeholder="Enter amount" aria-label="Username" aria-describedby="basic-addon1"/>
+            </div>
+
+            <button type="button" class="btn btn-success" style={{height: "39px", marginLeft: "20px", width: "200px"}}> <b> Filter </b> </button>
+        </div>
     );
 }
 

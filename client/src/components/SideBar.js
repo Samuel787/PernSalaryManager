@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  CDBBadge,
   CDBSidebar,
   CDBSidebarContent,
   CDBSidebarFooter,
@@ -11,11 +10,14 @@ import {
 } from 'cdbreact';
 import { useSelector, useDispatch } from 'react-redux';
 import filterIdAscending from '../actions/filterIdAscending';
+import openUploadModal from '../actions/openUploadModal';
 
 const SideBar = () => {
 
   const filter = useSelector(root => root.filter);
   const dispatch = useDispatch();
+  const isModalOpen = useSelector(root => root.isModalOpen);
+
   return (
 <div
       style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}
@@ -34,7 +36,7 @@ const SideBar = () => {
         <CDBSidebarContent className="sidebar-content">
           
           <CDBSidebarMenu>
-            <CDBSidebarMenuItem icon="chart-line" >
+            <CDBSidebarMenuItem icon="chart-line" onClick={() => dispatch(openUploadModal())}>
                 Upload CSV
             </CDBSidebarMenuItem>
 

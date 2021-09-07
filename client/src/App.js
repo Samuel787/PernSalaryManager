@@ -3,15 +3,20 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SalaryRange from './components/SalaryRange';
 import SideBar from './components/SideBar.js';
+import EmployeeDataTable from './components/EmployeeDataTable';
+import UploadModal from './components/UploadModal';
 
 function App() {
   return (
     <div className="App">
-      <CDBBox display="flex" justifyContent="center">
+      <div style={{flexDirection: "row", display: "flex"}}>
         <SideBar/>
-        <div style={{height:"200px", background:"red"}}></div>
-        <SalaryRange/>
-      </CDBBox>
+        <div style={{display: "flex", flexDirection: "column", flex: 1, margin: "40px"}}>
+          <SalaryRange/>
+          <EmployeeDataTable/>
+        </div>
+      </div>
+      <UploadModal/>
     </div>
   );
 }
