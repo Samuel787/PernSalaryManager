@@ -3,29 +3,59 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import closeUploadModal from '../actions/closeUploadModal';
 import openUploadModal from '../actions/openUploadModal';
+import axios from "axios";
 
 const UploadModal = () => {
 
     const isModalOpen = useSelector(root => root.isModalOpen);
     const dispatch = useDispatch()
 
+    // const uploadFileAction = (event) => {
+    //     event.preventDefault()
+    //     const file = event.target[0].files[0]
+    //     console.log("this is the file: ", file)
+    //     fetch("http://localhost:5000/users/upload", {
+    //         mode: "cors",
+    //         method: "POST",
+    //         body: file
+    //     }).then((res) => {
+    //         if (res.ok) {
+    //             console.log("Server said ok")
+    //         } else {
+    //             console.log("Server said not okay", res)
+    //         }
+    //     }, (e) => {
+    //         console.log("Not okay")
+    //     });
+    // }
+
+
     const uploadFileAction = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         const file = event.target[0].files[0]
-        fetch("http://localhost:5000/users/upload", {
-            mode: "no-cors",
-            method: "POST",
-            body: file
-        }).then((res) => {
-            if (res.ok) {
-                console.log("Server said ok")
-            } else {
-                console.log("Server said not okay", res)
+        if (file === null) {
+            console.log("There is no file")
+            return;
+        }
+        let formData = new FormData()
+        formData.append("file", file)
+        axios.post(
+            "http://localhost:5000/users/upload",
+            formData,
+            {
+                headers: {
+                    "Content-type": "multipart/form-data"
+                },
             }
-        }, (e) => {
-            console.log("Not okay")
-        });
+        )
+        .then (res => {
+            console.log("This is the response: ", res);
+        })
+        .catch (err => {
+            console.log(err);
+        })
     }
+
     return (
         <div>
 
