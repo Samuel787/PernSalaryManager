@@ -41,6 +41,10 @@ const SalaryRange = () => {
         var apiURL = "http://localhost:5000/users?"
         var apiCountURL = "http://localhost:5000/count?"
         var suffix = ""
+        if (+maxSalary < +minSalary) {
+            alert("Max Salary cannot be lesser than Min Salary")
+            return
+        }
         if (minSalary !== "" && minSalary !== undefined) {
             suffix += "minSalary=" + minSalary
         } else {
