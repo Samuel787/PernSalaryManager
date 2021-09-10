@@ -1,21 +1,32 @@
 const e = require("express");
 
 const validateData = async (data, database) => {
+    if (data.length === 0) {
+        return false;
+    }
+    var isFirstRow = true
     var isValid = true;
     const loginSet = new Set()
+    const idSet = new Set()
     for (const row of data) {
+        if (isFirstRow) {
+            isFirstRow = false
+            continue
+        }
         if (row.length != 4) {
             isValid = false;
+            console.log("The line doesn't have 4 rows")
             break;
         } else {
             const eId = row[0];
             const eLogin = row[1];
-            if (loginSet.has(eLogin)) {
+            if (loginSet.has(eLogin) || idSet.has(eId)) {
                 isValid = false
-                console.log("Duplicate logins in input detected")
+                console.log("Duplicate logins/eId in input detected")
                 break
             } else {
                 loginSet.add(eLogin)
+                idSet.add(eId)
             }
             const eName = row[2];
             var eSalary = row[3];
@@ -35,7 +46,7 @@ const validateData = async (data, database) => {
                 const duplicateLoginRecord = await database.getDuplicateLogin(eId, eLogin);
                 if (duplicateLoginRecord.rowCount > 0) {
                     isValid = false
-                    console.log("Duplicate login detected")
+                    console.log("Duplicate login detected: ", eLogin)
                     break
                 } 
             } catch (error) {

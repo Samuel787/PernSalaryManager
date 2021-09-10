@@ -10,26 +10,6 @@ const UploadModal = () => {
     const isModalOpen = useSelector(root => root.isModalOpen);
     const dispatch = useDispatch()
 
-    // const uploadFileAction = (event) => {
-    //     event.preventDefault()
-    //     const file = event.target[0].files[0]
-    //     console.log("this is the file: ", file)
-    //     fetch("http://localhost:5000/users/upload", {
-    //         mode: "cors",
-    //         method: "POST",
-    //         body: file
-    //     }).then((res) => {
-    //         if (res.ok) {
-    //             console.log("Server said ok")
-    //         } else {
-    //             console.log("Server said not okay", res)
-    //         }
-    //     }, (e) => {
-    //         console.log("Not okay")
-    //     });
-    // }
-
-
     const uploadFileAction = (event) => {
         event.preventDefault();
         const file = event.target[0].files[0]
@@ -50,9 +30,11 @@ const UploadModal = () => {
         )
         .then (res => {
             console.log("This is the response: ", res);
+            alert("Successfully uploaded. You may refresh page")
         })
         .catch (err => {
             console.log(err);
+            alert("Error occurred when uploading.")
         })
     }
 

@@ -1,4 +1,3 @@
-import { CDBBox } from 'cdbreact';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SalaryRange from './components/SalaryRange';

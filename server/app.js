@@ -21,6 +21,9 @@ const makeApp = (database) => {
     app.use(cors())
     app.use(bodyParser.json())
 
+    // LOCK
+    var isUploading = false
+
     app.get("/users", (req, res) => {
         if (getRequestVerifier(req) == false) {
             res.sendStatus(400)
@@ -31,15 +34,6 @@ const makeApp = (database) => {
             const limit = +req.query.limit;
             const sortOrder = req.query.sort.substring(0, 1) === "-" ? "-" : "+";
             const sortBy = req.query.sort.substring(1, req.query.sort.length);
-            // make the db call to get all the data
-            // console.log("These are the data: ")
-            // console.log(minSalary)
-            // console.log(maxSalary)
-            // console.log(offset)
-            // console.log(limit)
-            // console.log(sortOrder)
-            // console.log(sortBy)
-            // res.sendStatus(200)
             database.getEmployeeList(minSalary, maxSalary, offset, limit, sortOrder, sortBy)
             .then(result => {
                 if (result === null) {
@@ -65,35 +59,82 @@ const makeApp = (database) => {
         }
     })
 
+    app.get("/count", (req, res) => {
+        if (getRequestVerifier(req) == false) {
+            res.sendStatus(400)
+        } else {
+            const minSalary = +req.query.minSalary;
+            const maxSalary = +req.query.maxSalary;
+            const offset = +req.query.offset;
+            const limit = +req.query.limit;
+            const sortOrder = req.query.sort.substring(0, 1) === "-" ? "-" : "+";
+            const sortBy = req.query.sort.substring(1, req.query.sort.length);
+            database.getEmployeeList(minSalary, maxSalary, 0, 12000, sortOrder, sortBy)
+            .then(result => {
+                if (result === null) {
+                    console.log("Error in request")
+                    res.sendStatus(400)
+                } else {
+                    res.send({"count": result.rows.length})
+                }
+            })
+            .catch(error => {
+                console.log("this is the error: ", error)
+                res.sendStatus(400)
+            })
+        }
+    })
+
+    app.get("/numusers", (_, res) => {
+        database.getNumEmployees()
+        .then(result => {
+            res.send({"total": result.rows[0]["count"]})
+        })
+        .catch(error => {
+            console.log("This is the error: ", error);
+            res.sendStatus(400)
+        })
+    })
+
     app.post("/users/upload", upload.single("file"), (req, res) => {
+        if (isUploading) {
+            res.sendStatus(400)
+            return
+        }
+        isUploading = true
         const config = {
-            header: true,
+            header: false,
             comments: "#",
             dynamicTyping: true,
             skipEmptyLines:true,
         };
-        const data = Papa.parse(req.file.buffer.toString("utf-8"), ).data;
+        const data = Papa.parse(req.file.buffer.toString("utf-8"), config).data;
         dataVerifier(data, database)
         .then(isValid => {
             if (isValid) {
                 console.log("Data has been validated. isValid is ", isValid)
                 storeData(data, database).then(isSuccess => {
                     if (isSuccess) {
+                        isUploading = false
                         res.sendStatus(200)
                     } else {
+                        isUploading = false
                         res.sendStatus(400)
                     }
                 })
                 .catch(err => {
+                    isUploading = false
                     console.log("An error has occurred: ", err)
                     res.sendStatus(400)
                 });
             } else {
+                isUploading = false
                 console.log("Data has not been validated. isValid is ", isValid)
                 res.sendStatus(400)
             }
         })
         .catch(err => {
+            isUploading = false
             console.log("An error has occurred: ", err)
             res.sendStatus(200)
         });

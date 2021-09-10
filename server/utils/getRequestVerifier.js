@@ -30,7 +30,6 @@ const getRequestVerifier = (req) => {
         return false;
     }
     var sortParam = req.query.sort;
-    console.log("THis is sortParam: ", sortParam)
     if (sortParam.length == 0 
         || (sortParam.substring(0, 1) !== "+" 
             && sortParam.substring(0, 1) !== "-"

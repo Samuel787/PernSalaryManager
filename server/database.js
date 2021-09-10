@@ -38,6 +38,13 @@ const getDuplicateLogin = async(eId, eLogin) => {
     return result;
 }
 
+const getNumEmployees = async() => {
+    const result = await pool.query(
+        `SELECT count(*) FROM employees`
+    );
+    return result;
+}
+
 const getEmployeeList = async(minSalary, maxSalary, offset, limit, sortOrder, sortBy) => {
     var orderColumnName;
     switch (sortBy) {
@@ -54,26 +61,80 @@ const getEmployeeList = async(minSalary, maxSalary, offset, limit, sortOrder, so
             orderColumnName = "employee_salary";
             break;
         default:
-            orderColumnName = "table_id";
+            orderColumnName = "employee_id";
             break;
     }
     try {
-        if (sortOrder === "-") {
+        if (sortOrder === "-" && orderColumnName === "employee_id") {
             const result = await pool.query(
                 `SELECT * FROM employees
                  WHERE employee_salary >= $1 AND employee_salary <= $2
-                 ORDER BY $3 DESC
-                 LIMIT $5 OFFSET $6`,
-                 [minSalary, maxSalary, orderColumnName, limit, offset]
+                 ORDER BY employee_id DESC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "+" && orderColumnName === "employee_id") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_id ASC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "+" && orderColumnName === "employee_login") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_login ASC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "-" && orderColumnName === "employee_login") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_login DESC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "+" && orderColumnName === "employee_name") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_name ASC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "-" && orderColumnName === "employee_name") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_name DESC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
+            );
+            return result;
+        } else if (sortOrder === "+" && orderColumnName === "employee_salary") {
+            const result = await pool.query(
+                `SELECT * FROM employees
+                 WHERE employee_salary >= $1 AND employee_salary <= $2
+                 ORDER BY employee_salary ASC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
             );
             return result;
         } else {
             const result = await pool.query(
                 `SELECT * FROM employees
                  WHERE employee_salary >= $1 AND employee_salary <= $2
-                 ORDER BY $3 ASC
-                 LIMIT $4 OFFSET $5`,
-                 [minSalary, maxSalary, orderColumnName, limit, offset]
+                 ORDER BY employee_salary DESC
+                 LIMIT $3 OFFSET $4`,
+                 [minSalary, maxSalary, limit, offset]
             );
             return result;
         }
@@ -88,5 +149,6 @@ module.exports = {
     updateEmployee,
     getEmployee,
     getDuplicateLogin,
-    getEmployeeList
+    getEmployeeList,
+    getNumEmployees
 }
